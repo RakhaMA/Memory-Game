@@ -131,7 +131,18 @@ public class GenerateRandomColor : MonoBehaviour
         {
             // Colors match, do something (e.g., increase score, destroy the block, etc.)
             Debug.Log("Color matched!");
-            GameManager.instance.score += scorePoint;
+            // Increase combo chain
+            GameManager.instance.comboChain += 1;
+            if(GameManager.instance.comboChain > 1)
+            {
+                GameManager.instance.comboChainText.gameObject.SetActive(true);
+            }else{
+                GameManager.instance.comboChainText.gameObject.SetActive(false);
+            }
+            GameManager.instance.comboChainText.text = "Combo : x " + GameManager.instance.comboChain.ToString();
+            // Add score based on combo chain
+            AddScore(GameManager.instance.comboChain);
+            // Destroy the block
             Destroy(clickedBlock);
             blocksList.Remove(clickedBlock);
             blockColorsList.Remove(generatedColor);
@@ -140,6 +151,14 @@ public class GenerateRandomColor : MonoBehaviour
         {
             // Colors don't match, do something else (e.g., display a message, play a sound, etc.)
             Debug.Log("Color not matched!");
+            GameManager.instance.comboChain = 0;
         }
+    }
+
+    public void AddScore(int comboChain)
+    {
+        int score = scorePoint * comboChain;
+        GameManager.instance.score += score;
+        GameManager.instance.scoreText.text = "Score: " + GameManager.instance.score.ToString();
     }
 }

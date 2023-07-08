@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     public GameObject generateRandomColorButton;
     public TextMeshProUGUI randomColorText;
     public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI comboChainText;
     public int score;
+    public int comboChain;
     public bool blocksClickable;
 
     private void Awake()
@@ -32,8 +34,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // update score text
-        scoreText.text = "Score : " + score.ToString();
+        
     }
 
     // Function to disable block clicks
