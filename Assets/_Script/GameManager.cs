@@ -1,16 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
+    public Timer timer;
     public static GameManager instance;
     public GameObject generateRandomColorButton;
     public TextMeshProUGUI randomColorText;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI comboChainText;
-    public int score;
+    public TextMeshProUGUI timerText;
+    public GameObject gameOverPanel;
+    public float score;
     public int comboChain;
     public bool blocksClickable;
 
@@ -28,13 +33,24 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        timer.StartTimer(GameData.instance.gameTimer, OnTimerEnd);
+
+        gameOverPanel.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTimerEnd()
     {
-        
+        gameOverPanel.SetActive(true);
+    }
+
+    public void PauseTime()
+    {
+        timer.PauseTimer();
+    }
+
+    public void ResumeTime()
+    {
+        timer.ResumeTimer();
     }
 
     // Function to disable block clicks
@@ -53,5 +69,10 @@ public class GameManager : MonoBehaviour
     public bool AreBlocksClickable()
     {
         return blocksClickable;
+    }
+
+    public void MainMenuButton()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

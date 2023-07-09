@@ -29,11 +29,13 @@ public class ObjectDetection : MonoBehaviour
     private IEnumerator ShowColorForDuration()
     {
         blockColor.ShowBlockColor(); // Show the block color
+        GameManager.instance.PauseTime(); // Pause the timer
 
         yield return new WaitForSeconds(2f);
         
         generateRandomColor.CheckColorMatch(gameObject); // Check if the block color matches the generated color
         blockColor.HideBlockColor(); // Hide the block color after 2 seconds
         GameManager.instance.generateRandomColorButton.SetActive(true); // Show the generate random color button
+        GameManager.instance.ResumeTime(); // Resume the timer
     }
 }

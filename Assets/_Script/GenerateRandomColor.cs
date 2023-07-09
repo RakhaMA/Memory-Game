@@ -113,6 +113,8 @@ public class GenerateRandomColor : MonoBehaviour
             // color still available, get another color
             generatedColor = colors[randomIndex];
             GameManager.instance.randomColorText.text = generatedColor.ToString();
+            // Set the color of the text based on generated color
+            GameManager.instance.randomColorText.color = GetColor(generatedColor);
             GameManager.instance.EnableBlockClicks();
             GameManager.instance.generateRandomColorButton.SetActive(false);
             return generatedColor;
@@ -120,6 +122,27 @@ public class GenerateRandomColor : MonoBehaviour
         {
             // color not available, get another color
             return GetRandomColor();
+        }
+    }
+
+    public Color GetColor(BlockColorType blockColor)
+    {
+        switch (blockColor)
+        {
+            case BlockColorType.Red:
+                return Color.red;
+            case BlockColorType.Green:
+                return Color.green;
+            case BlockColorType.Blue:
+                return Color.blue;
+            case BlockColorType.Yellow:
+                return Color.yellow;
+            case BlockColorType.Black:
+                return Color.black;
+            case BlockColorType.Purple:
+                return Color.magenta;
+            default:
+                return Color.white;
         }
     }
 
@@ -152,12 +175,19 @@ public class GenerateRandomColor : MonoBehaviour
             // Colors don't match, do something else (e.g., display a message, play a sound, etc.)
             Debug.Log("Color not matched!");
             GameManager.instance.comboChain = 0;
+            GameManager.instance.comboChainText.gameObject.SetActive(false);
         }
     }
 
     public void AddScore(int comboChain)
     {
-        int score = scorePoint * comboChain;
+        float x;
+        if(GameData.instance.gameTimer == 120){
+            x = 0.5f;
+        }else{
+            x = 1f;
+        }
+        float score = scorePoint * comboChain * x;
         GameManager.instance.score += score;
         GameManager.instance.scoreText.text = "Score: " + GameManager.instance.score.ToString();
     }
