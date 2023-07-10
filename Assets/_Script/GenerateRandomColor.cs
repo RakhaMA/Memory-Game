@@ -21,12 +21,6 @@ public class GenerateRandomColor : MonoBehaviour
         GetRandomColor();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     void GenerateBlocks()
     {
         // Instantiate the blocks
@@ -101,27 +95,47 @@ public class GenerateRandomColor : MonoBehaviour
 
     public void GetRandomColorButton()
     {
+        AudioManager.audioInstance.PlayRoll(); // Play the roll sound
         GetRandomColor();
+    }
+
+    public bool isColorsListAvailable()
+    {
+        if(blockColorsList.Count > 0)
+        {
+            return true;
+        }else
+        {
+            return false;
+        }
     }
 
     public BlockColorType GetRandomColor()
     {
-        int randomIndex = Random.Range(0, colors.Length);
-        // check if color still available
-        if(blockColorsList.Contains(colors[randomIndex]) && blockColorsList.Count > 0)
-        {
-            // color still available, get another color
-            generatedColor = colors[randomIndex];
-            GameManager.instance.randomColorText.text = generatedColor.ToString();
-            // Set the color of the text based on generated color
-            GameManager.instance.randomColorText.color = GetColor(generatedColor);
-            GameManager.instance.EnableBlockClicks();
-            GameManager.instance.generateRandomColorButton.SetActive(false);
-            return generatedColor;
+        // check if there blockColorsList still available
+        if(isColorsListAvailable()){
+            int randomIndex = Random.Range(0, colors.Length);
+            // check if the color is still available
+            if(blockColorsList.Contains(colors[randomIndex]))
+            {
+                // color still available, get another color
+                generatedColor = colors[randomIndex];
+                GameManager.instance.randomColorText.text = generatedColor.ToString();
+                // Set the color of the text based on generated color
+                GameManager.instance.randomColorText.color = GetColor(generatedColor);
+                GameManager.instance.EnableBlockClicks();
+                GameManager.instance.generateRandomColorButton.SetActive(false);
+                return generatedColor;
+            }else
+            {
+                // color not available, get another color
+                return GetRandomColor();
+            }
         }else
         {
-            // color not available, get another color
-            return GetRandomColor();
+            // no more color available, game over
+            //GameManager.instance.GameClear();
+            return BlockColorType.Black;
         }
     }
 
@@ -154,6 +168,7 @@ public class GenerateRandomColor : MonoBehaviour
         {
             // Colors match, do something (e.g., increase score, destroy the block, etc.)
             Debug.Log("Color matched!");
+            AudioManager.audioInstance.PlayCardMatch(); // Play the correct sound
             // Increase combo chain
             GameManager.instance.comboChain += 1;
             if(GameManager.instance.comboChain > 1)
@@ -169,6 +184,13 @@ public class GenerateRandomColor : MonoBehaviour
             Destroy(clickedBlock);
             blocksList.Remove(clickedBlock);
             blockColorsList.Remove(generatedColor);
+
+            // Check if there are still blocks left
+            if(blocksList.Count == 0)
+            {
+                // No more blocks left, game clear
+                GameManager.instance.GameClear();
+            }
         }
         else
         {
@@ -190,5 +212,6 @@ public class GenerateRandomColor : MonoBehaviour
         float score = scorePoint * comboChain * x;
         GameManager.instance.score += score;
         GameManager.instance.scoreText.text = "Score: " + GameManager.instance.score.ToString();
+        GameManager.instance.finalScoreText.text = "Your Score\n " + GameManager.instance.score.ToString();
     }
 }

@@ -28,6 +28,7 @@ public class ObjectDetection : MonoBehaviour
 
     private IEnumerator ShowColorForDuration()
     {
+        AudioManager.audioInstance.PlayCardFlip(); // Play the card flip sound
         blockColor.ShowBlockColor(); // Show the block color
         GameManager.instance.PauseTime(); // Pause the timer
 
@@ -37,5 +38,6 @@ public class ObjectDetection : MonoBehaviour
         blockColor.HideBlockColor(); // Hide the block color after 2 seconds
         GameManager.instance.generateRandomColorButton.SetActive(true); // Show the generate random color button
         GameManager.instance.ResumeTime(); // Resume the timer
+        AudioManager.audioInstance.PlayCardTurn(); // Play the card turn sound
     }
 }
